@@ -162,10 +162,17 @@ const EditPostPage = () => {
               modules={{
                 toolbar: [
                   [{ header: [1, 2, false] }],
-                  ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                  ['bold', 'strike', 'italic', 'underline'],
                   [{ list: 'ordered' }, { list: 'bullet' }],
+                  [
+                    { align: '' },
+                    { align: 'center' },
+                    { align: 'right' },
+                    { align: 'justify' },
+                  ],
                   ['link', 'image'],
                   ['clean'],
+                  ['zoomOut'],
                 ],
               }}
               className='[&_.ql-container]:border-0 [&_.ql-toolbar]:border-t-0 [&_.ql-toolbar]:border-l-0 [&_.ql-toolbar]:border-r-0 [&_.ql-toolbar]:border-b-[#D5D7DA] [&_.ql-editor]:min-h-[238]'

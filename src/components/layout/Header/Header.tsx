@@ -181,7 +181,10 @@ const Header = () => {
       {isLogin && isProfileOpen && (
         <div className='absolute top-[60px] right-[12px] md:right-[75px] translate-x-0 z-10 bg-white rounded-[16px]'>
           <div className='flex flex-col py-2 px-4 border border-[#D5D7DA] rounded-[16px]'>
-            <Link href='/profile'>
+            <Link
+              href='/profile'
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+            >
               <div className='h-10 w-[182px] flex items-center gap-2 cursor-pointer text-[#0A0D12] hover:text-[#0093DD]'>
                 <UserRound className='h-4 w-4' />
                 <p className='font-regular text-[12px] leading-[24px] tracking-[-0.03em]'>
