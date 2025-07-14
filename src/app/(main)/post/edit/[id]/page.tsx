@@ -8,14 +8,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import Image from 'next/image';
 import { ArrowUpToLine, CloudUpload, Trash, XCircle } from 'lucide-react';
-import { Textarea } from '@/components/ui/Textarea';
+import ReactQuill from 'react-quill-new';
 
 const EditPostPage = () => {
   const api = useApi();
   const router = useRouter();
   const { id } = useParams();
   const postId = Number.parseInt(id as string);
-
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tagsInput, setTagsInput] = useState('');
@@ -45,9 +44,14 @@ const EditPostPage = () => {
     fetchPost();
   }, [postId, api]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
+  const handleImageChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | { target: { files: FileList | null } }
+  ) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      const file = files[0];
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
@@ -149,15 +153,25 @@ const EditPostPage = () => {
           >
             Content
           </label>
-          <Textarea
-            id='content'
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder='Enter your content'
-            disabled={isSubmitting}
-            required
-            className='min-h-[238px]'
-          />
+          <div className='w-full border border-[#D5D7DA] rounded-[12px] focus-within:border-[#0093DD] transition-colors overflow-hidden'>
+            <ReactQuill
+              id='content'
+              value={content}
+              onChange={setContent}
+              placeholder='Enter your content'
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, false] }],
+                  ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                  [{ list: 'ordered' }, { list: 'bullet' }],
+                  ['link', 'image'],
+                  ['clean'],
+                ],
+              }}
+              className='[&_.ql-container]:border-0 [&_.ql-toolbar]:border-t-0 [&_.ql-toolbar]:border-l-0 [&_.ql-toolbar]:border-r-0 [&_.ql-toolbar]:border-b-[#D5D7DA] [&_.ql-editor]:min-h-[238]'
+              theme='snow'
+            />
+          </div>
         </div>
 
         <div className='flex flex-col gap-1'>
@@ -168,7 +182,18 @@ const EditPostPage = () => {
             Post Image
           </label>
           {!imagePreview && (
-            <div className='flex items-center flex-col gap-4 relative h-[140px] border-dotted border border-[#A4A7AE] rounded-[12px]'>
+            <div
+              className='flex items-center flex-col gap-4 relative h-[140px] border-dotted border border-[#A4A7AE] rounded-[12px]'
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleImageChange({ target: { files: e.dataTransfer.files } });
+              }}
+            >
               <Input
                 id='image'
                 type='file'
@@ -176,17 +201,6 @@ const EditPostPage = () => {
                 onChange={handleImageChange}
                 disabled={isSubmitting}
                 required
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                    const file = e.dataTransfer.files[0];
-                    const target = { files: [file] };
-                    handleImageChange({
-                      target,
-                    } as unknown as React.ChangeEvent<HTMLInputElement>);
-                  }
-                }}
                 className='absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10'
               />
               <div className='absolute inset-0 flex flex-col gap-1 items-center justify-center font-semibold text-[14px] leading-[28px] text-[#414651]'>
@@ -214,7 +228,7 @@ const EditPostPage = () => {
 
               <div className='absolute flex flex-col gap-3'>
                 <Image
-                  src={imagePreview || '/placeholder.svg'}
+                  src={imagePreview}
                   alt='Image Preview'
                   height={280}
                   width={530}
@@ -257,10 +271,10 @@ const EditPostPage = () => {
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
             onKeyDown={handleAddTag}
-            placeholder='Enter your tags'
+            placeholder='Enter tags and press Enter'
             disabled={isSubmitting}
           />
-          <div className='flex flex-wrap gap-1'>
+          <div className='flex flex-wrap gap-1 mt-2'>
             {tags.map((tag) => (
               <span
                 key={tag}
@@ -281,12 +295,13 @@ const EditPostPage = () => {
             {error}
           </p>
         )}
+
         <Button
           type='submit'
           disabled={isSubmitting}
-          className='ml-auto max-w-[265px]'
+          className='md:max-w-[264px] ml-auto'
         >
-          {isSubmitting ? 'Updating...' : 'Update Post'}
+          {isSubmitting ? 'Creating...' : 'Create Post'}
         </Button>
       </form>
     </div>

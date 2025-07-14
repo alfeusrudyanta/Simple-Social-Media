@@ -7,14 +7,14 @@ import { useRouter } from 'next/navigation';
 import useApi from '@/lib/api-selector';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
 import { XCircle, CloudUpload, Trash, ArrowUpToLine } from 'lucide-react';
 import Image from 'next/image';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 const CreatePostPage = () => {
   const api = useApi();
   const router = useRouter();
-
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tagsInput, setTagsInput] = useState('');
@@ -29,9 +29,14 @@ const CreatePostPage = () => {
     fileInputRef.current?.click();
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
+  const handleImageChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | { target: { files: FileList | null } }
+  ) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      const file = files[0];
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
@@ -40,6 +45,9 @@ const CreatePostPage = () => {
   const handleRemoveImage = () => {
     setImageFile(null);
     setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -69,7 +77,7 @@ const CreatePostPage = () => {
     }
 
     if (tags.length === 0) {
-      setError('Please fill in related tags.');
+      setError('Please add at least one tag.');
       setIsSubmitting(false);
       return;
     }
@@ -84,7 +92,7 @@ const CreatePostPage = () => {
       router.push('/profile');
     } catch (err) {
       console.error('Failed to create post:', err);
-      setError('Please input related tags.');
+      setError('Failed to create post. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -118,16 +126,25 @@ const CreatePostPage = () => {
           >
             Content
           </label>
-
-          <Textarea
-            id='content'
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder='Enter your content'
-            disabled={isSubmitting}
-            required
-            className='min-h-[238px]'
-          />
+          <div className='w-full border border-[#D5D7DA] rounded-[12px] focus-within:border-[#0093DD] transition-colors overflow-hidden'>
+            <ReactQuill
+              id='content'
+              value={content}
+              onChange={setContent}
+              placeholder='Enter your content'
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, false] }],
+                  ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                  [{ list: 'ordered' }, { list: 'bullet' }],
+                  ['link', 'image'],
+                  ['clean'],
+                ],
+              }}
+              className='[&_.ql-container]:border-0 [&_.ql-toolbar]:border-t-0 [&_.ql-toolbar]:border-l-0 [&_.ql-toolbar]:border-r-0 [&_.ql-toolbar]:border-b-[#D5D7DA] [&_.ql-editor]:min-h-[238]'
+              theme='snow'
+            />
+          </div>
         </div>
 
         <div className='flex flex-col gap-1'>
@@ -138,7 +155,18 @@ const CreatePostPage = () => {
             Post Image
           </label>
           {!imagePreview && (
-            <div className='flex items-center flex-col gap-4 relative h-[140px] border-dotted border border-[#A4A7AE] rounded-[12px]'>
+            <div
+              className='flex items-center flex-col gap-4 relative h-[140px] border-dotted border border-[#A4A7AE] rounded-[12px]'
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleImageChange({ target: { files: e.dataTransfer.files } });
+              }}
+            >
               <Input
                 id='image'
                 type='file'
@@ -146,17 +174,6 @@ const CreatePostPage = () => {
                 onChange={handleImageChange}
                 disabled={isSubmitting}
                 required
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                    const file = e.dataTransfer.files[0];
-                    const target = { files: [file] };
-                    handleImageChange({
-                      target,
-                    } as unknown as React.ChangeEvent<HTMLInputElement>);
-                  }
-                }}
                 className='absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10'
               />
               <div className='absolute inset-0 flex flex-col gap-1 items-center justify-center font-semibold text-[14px] leading-[28px] text-[#414651]'>
@@ -184,7 +201,7 @@ const CreatePostPage = () => {
 
               <div className='absolute flex flex-col gap-3'>
                 <Image
-                  src={imagePreview || '/placeholder.svg'}
+                  src={imagePreview}
                   alt='Image Preview'
                   height={280}
                   width={530}
@@ -227,10 +244,10 @@ const CreatePostPage = () => {
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
             onKeyDown={handleAddTag}
-            placeholder='Enter your tags'
+            placeholder='Enter tags and press Enter'
             disabled={isSubmitting}
           />
-          <div className='flex flex-wrap gap-1'>
+          <div className='flex flex-wrap gap-1 mt-2'>
             {tags.map((tag) => (
               <span
                 key={tag}
