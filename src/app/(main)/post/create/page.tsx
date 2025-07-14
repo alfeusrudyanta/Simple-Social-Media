@@ -118,6 +118,7 @@ const CreatePostPage = () => {
           >
             Content
           </label>
+
           <Textarea
             id='content'
             value={content}

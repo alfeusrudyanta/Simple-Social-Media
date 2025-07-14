@@ -1,7 +1,6 @@
 'use client';
 
 import type React from 'react';
-
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import useApi from '@/lib/api-selector';
@@ -78,6 +77,18 @@ const EditPostPage = () => {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
+
+    if (!title.trim() || !content.trim()) {
+      setError('Please fill in title and content.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (tags.length === 0) {
+      setError('Please fill in related tags.');
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const currentPostData = await api.getPostById(postId);
