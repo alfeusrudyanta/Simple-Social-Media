@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useApi from '@/lib/api-selector';
 import { Button } from '@/components/ui/Button';
@@ -11,8 +11,10 @@ import { XCircle, CloudUpload, Trash, ArrowUpToLine } from 'lucide-react';
 import Image from 'next/image';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { useAuth } from '@/contexts/auth-context';
 
 const CreatePostPage = () => {
+  const { isLogin } = useAuth();
   const api = useApi();
   const router = useRouter();
   const [title, setTitle] = useState('');
@@ -24,6 +26,12 @@ const CreatePostPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!isLogin) {
+      router.push('/login');
+    }
+  });
 
   const handleTriggerFileInput = () => {
     fileInputRef.current?.click();

@@ -9,9 +9,11 @@ import { Input } from '@/components/ui/Input';
 import Image from 'next/image';
 import { ArrowUpToLine, CloudUpload, Trash, XCircle } from 'lucide-react';
 import ReactQuill from 'react-quill-new';
+import { useAuth } from '@/contexts/auth-context';
 
 const EditPostPage = () => {
   const api = useApi();
+  const { isLogin } = useAuth();
   const router = useRouter();
   const { id } = useParams();
   const postId = Number.parseInt(id as string);
@@ -30,6 +32,10 @@ const EditPostPage = () => {
   };
 
   useEffect(() => {
+    if (!isLogin) {
+      router.push('/login');
+    }
+
     const fetchPost = async () => {
       try {
         const postData = await api.getPostById(postId);
@@ -42,7 +48,7 @@ const EditPostPage = () => {
       }
     };
     fetchPost();
-  }, [postId, api]);
+  }, [postId, api, isLogin, router]);
 
   const handleImageChange = (
     e:

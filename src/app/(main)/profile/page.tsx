@@ -15,7 +15,7 @@ import PostCard from '@/components/PostCard';
 import { Input } from '@/components/ui/Input';
 
 const MyProfilePage = () => {
-  const { currentUser, refreshUser } = useAuth();
+  const { currentUser, refreshUser, isLogin } = useAuth();
   const api = useApi();
   const router = useRouter();
   const [myPosts, setMyPosts] = useState<Post[]>([]);
@@ -32,6 +32,10 @@ const MyProfilePage = () => {
   );
 
   useEffect(() => {
+    if (!isLogin) {
+      router.push('/login');
+    }
+
     const fetchMyPosts = async () => {
       try {
         const res = await api.getMyPosts();
@@ -43,7 +47,7 @@ const MyProfilePage = () => {
 
     const interval = setInterval(fetchMyPosts, 1000);
     return () => clearInterval(interval);
-  }, [api]);
+  }, [api, isLogin, router]);
 
   const handleUpdateProfile = async (data: {
     name?: string;
