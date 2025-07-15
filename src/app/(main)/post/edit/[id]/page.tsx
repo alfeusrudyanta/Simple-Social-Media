@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { ArrowUpToLine, CloudUpload, Trash, XCircle } from 'lucide-react';
 import ReactQuill from 'react-quill-new';
 import { useAuth } from '@/contexts/auth-context';
+import { toast, Toaster } from '@/components/ui/sonner';
 
 const EditPostPage = () => {
   const api = useApi();
@@ -24,7 +25,6 @@ const EditPostPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleTriggerFileInput = () => {
@@ -85,17 +85,16 @@ const EditPostPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setIsSubmitting(true);
 
     if (!title.trim() || !content.trim()) {
-      setError('Please fill in title and content.');
+      toast.error('Please fill in title and content.');
       setIsSubmitting(false);
       return;
     }
 
     if (tags.length === 0) {
-      setError('Please fill in related tags.');
+      toast.error('Please fill in related tags.');
       setIsSubmitting(false);
       return;
     }
@@ -119,15 +118,17 @@ const EditPostPage = () => {
       if (imageFile) dataToUpdate.image = imageFile;
 
       if (Object.keys(dataToUpdate).length === 0) {
-        setError('No changes to save.');
+        toast.error('No changes to save.');
         setIsSubmitting(false);
         return;
       }
 
       await api.updatePost(postId, dataToUpdate);
+      toast.success('Post successfully updated.');
       router.push(`/post/${postId}`);
-    } catch (err) {
-      console.error('Failed to update post:', err);
+    } catch (error) {
+      console.error('Failed to update post:', error);
+      toast.error('Failed to update post: Please try again later.');
     }
   };
 
@@ -303,12 +304,6 @@ const EditPostPage = () => {
           </div>
         </div>
 
-        {error && (
-          <p className='font-semibold text-[16px] leading-[32px] text-red-500'>
-            {error}
-          </p>
-        )}
-
         <Button
           type='submit'
           disabled={isSubmitting}
@@ -317,6 +312,8 @@ const EditPostPage = () => {
           {isSubmitting ? 'Creating...' : 'Create Post'}
         </Button>
       </form>
+
+      <Toaster />
     </div>
   );
 };

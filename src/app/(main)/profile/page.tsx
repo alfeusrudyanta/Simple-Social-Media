@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { cn } from '@/utils/cn';
 import PostCard from '@/components/PostCard';
 import { Input } from '@/components/ui/input';
+import { toast, Toaster } from '@/components/ui/sonner';
 
 const MyProfilePage = () => {
   const { currentUser, refreshUser, isLogin } = useAuth();
@@ -27,9 +28,6 @@ const MyProfilePage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [passwordError, setPasswordError] = useState<undefined | string>(
-    undefined
-  );
 
   useEffect(() => {
     if (!isLogin) {
@@ -57,9 +55,11 @@ const MyProfilePage = () => {
     try {
       await api.updateProfile(data);
       await refreshUser();
+      toast.success('Profile updated successfully.');
       setIsEditProfileModalOpen(false);
     } catch (error) {
       console.error('Failed to update profile:', error);
+      toast.error('Failed to update profile: Please try again later.');
     }
   };
 
@@ -67,16 +67,13 @@ const MyProfilePage = () => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      return setPasswordError('Password must match.');
+      toast.error('Password must match.');
     }
 
     if (currentPassword === newPassword) {
-      return setPasswordError(
-        'Current password must not be the same as the new password.'
-      );
+      toast.error('Current password must not be the same as the new password.');
     }
 
-    setPasswordError(undefined);
     setIsSubmitting(true);
 
     try {
@@ -85,9 +82,12 @@ const MyProfilePage = () => {
         currentPassword,
         newPassword,
       });
+      toast.success('Password successfully changed.');
     } catch (error) {
       console.error('Failed to change password:', error);
-      setPasswordError('Please input the correct password.');
+      toast.error(
+        'Failed to change password: Please input the correct password.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -267,12 +267,6 @@ const MyProfilePage = () => {
               </div>
             </div>
 
-            {passwordError && (
-              <p className='font-normal text-[16px] leading-[28px] tracking-[-0.03em] text-red-500'>
-                {passwordError}
-              </p>
-            )}
-
             <Button type='submit' disabled={isSubmitting}>
               {isSubmitting ? 'Changing...' : 'Update Password'}
             </Button>
@@ -288,6 +282,8 @@ const MyProfilePage = () => {
           onUpdateProfile={handleUpdateProfile}
         />
       )}
+
+      <Toaster />
     </div>
   );
 };

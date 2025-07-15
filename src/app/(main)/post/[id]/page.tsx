@@ -13,6 +13,7 @@ import LikeComment from '@/components/LikeComment';
 import PostCard from '@/components/PostCard';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { toast, Toaster } from '@/components/ui/sonner';
 
 const PostDetail = () => {
   const api = useApi();
@@ -50,12 +51,14 @@ const PostDetail = () => {
 
     setIsSubmittingComment(true);
     try {
+      toast.success('Comment successfully created.');
       await api.createComment(Number.parseInt(id as string), {
         content: commentText.trim(),
       });
       setNewComment('');
     } catch (error) {
       console.error('Failed to submit comment:', error);
+      toast.error('Failed to submit comment: Please try again later.');
     } finally {
       setIsSubmittingComment(false);
     }
@@ -276,6 +279,8 @@ const PostDetail = () => {
         onClose={() => setIsCommentsModalOpen(false)}
         postId={Number.parseInt(id as string)}
       />
+
+      <Toaster />
     </div>
   );
 };

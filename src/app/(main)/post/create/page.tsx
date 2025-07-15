@@ -12,6 +12,7 @@ import Image from 'next/image';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useAuth } from '@/contexts/auth-context';
+import { toast, Toaster } from '@/components/ui/sonner';
 
 const CreatePostPage = () => {
   const { isLogin } = useAuth();
@@ -24,7 +25,6 @@ const CreatePostPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -75,17 +75,16 @@ const CreatePostPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setIsSubmitting(true);
 
     if (!title.trim() || !content.trim() || !imageFile) {
-      setError('Please fill in title, content, and upload an image.');
+      toast.error('Please fill in title, content, and upload an image.');
       setIsSubmitting(false);
       return;
     }
 
     if (tags.length === 0) {
-      setError('Please add at least one tag.');
+      toast.error('Please add at least one tag.');
       setIsSubmitting(false);
       return;
     }
@@ -97,10 +96,11 @@ const CreatePostPage = () => {
         tags,
         image: imageFile,
       });
+      toast.success('Post successfully created.');
       router.push('/profile');
-    } catch (err) {
-      console.error('Failed to create post:', err);
-      setError('Failed to create post. Please try again.');
+    } catch (error) {
+      console.error('Failed to create post:', error);
+      toast.error('Failed to create post. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -278,12 +278,6 @@ const CreatePostPage = () => {
           </div>
         </div>
 
-        {error && (
-          <p className='font-semibold text-[16px] leading-[32px] text-red-500'>
-            {error}
-          </p>
-        )}
-
         <Button
           type='submit'
           disabled={isSubmitting}
@@ -292,6 +286,8 @@ const CreatePostPage = () => {
           {isSubmitting ? 'Creating...' : 'Create Post'}
         </Button>
       </form>
+
+      <Toaster />
     </div>
   );
 };

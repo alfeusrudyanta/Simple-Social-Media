@@ -8,6 +8,7 @@ import type { RegisterResponse } from '@/interfaces/api';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { toast, Toaster } from '@/components/ui/sonner';
 
 const Register = () => {
   const api = useApi();
@@ -17,7 +18,6 @@ const Register = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const onRegister = async (e: React.FormEvent) => {
@@ -26,12 +26,12 @@ const Register = () => {
 
     if (password !== confirmPassword) {
       setIsSubmitting(false);
-      return setError('Password must be match.');
+      toast.error('Password must be match.');
     }
 
     if (password.length < 8) {
       setIsSubmitting(false);
-      return setError('Password must at least be 8 characters.');
+      toast.error('Password must at least be 8 characters.');
     }
 
     try {
@@ -42,10 +42,11 @@ const Register = () => {
       });
 
       if (res.id && res.email) {
+        toast.success('Register successful. Redirecting...');
         router.push('/login');
       }
     } catch (error) {
-      setError('Failed to register. Email already registered.');
+      toast.error('Failed to register. Email already registered.');
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -118,12 +119,6 @@ const Register = () => {
           />
         </div>
 
-        {error && (
-          <p className='font-normal text-[16px] leading-[30px] tracking-[-0.03em] text-[#EE1D52]'>
-            {error}
-          </p>
-        )}
-
         <Button type='submit' disabled={isSubmitting}>
           {isSubmitting ? 'Registering...' : 'Register'}
         </Button>
@@ -139,6 +134,8 @@ const Register = () => {
           </Link>
         </div>
       </form>
+
+      <Toaster />
     </div>
   );
 };

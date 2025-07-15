@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { toast, Toaster } from '@/components/ui/sonner';
 
 const Login = () => {
   const api = useApi();
@@ -17,7 +18,6 @@ const Login = () => {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const onLogin = async (e: React.FormEvent) => {
@@ -26,7 +26,8 @@ const Login = () => {
 
     if (password.length < 8) {
       setIsSubmitting(false);
-      return setError('Password must at least be 8 characters.');
+      toast.error('Password must be at least 8 characters.');
+      return;
     }
 
     try {
@@ -34,21 +35,20 @@ const Login = () => {
 
       if (res.token) {
         login(res.token, email);
+        toast.success('Login successful. Redirecting...');
         router.push('/');
       } else {
-        setError('Login failed. Please try again.');
-        setIsSubmitting(false);
+        toast.error('Invalid credentials. Please try again.');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setError('Please enter a valid email and/or password.');
+      toast.error('Login failed. Please check your credentials.');
+    } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleInputChange = (field: 'email' | 'password', value: string) => {
-    if (error) setError('');
-
     if (field === 'email') {
       setEmail(value);
     } else {
@@ -98,12 +98,6 @@ const Login = () => {
           />
         </div>
 
-        {error && (
-          <p className='font-normal text-[16px] leading-[30px] tracking-[-0.03em] text-[#EE1D52]'>
-            {error}
-          </p>
-        )}
-
         <Button type='submit' disabled={isSubmitting}>
           {isSubmitting ? 'Logging in...' : 'Login'}
         </Button>
@@ -119,6 +113,8 @@ const Login = () => {
           </Link>
         </div>
       </form>
+
+      <Toaster />
     </div>
   );
 };
