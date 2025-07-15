@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { ArrowUpToLine, CloudUpload, Trash, XCircle } from 'lucide-react';
-import ReactQuill from 'react-quill-new';
+import TextEditor from '@/components/TextEditor';
 import { useAuth } from '@/contexts/auth-context';
 import { toast, Toaster } from '@/components/ui/sonner';
 
@@ -161,30 +161,7 @@ const EditPostPage = () => {
             Content
           </label>
           <div className='w-full border border-[#D5D7DA] rounded-[12px] focus-within:border-[#0093DD] transition-colors overflow-hidden'>
-            <ReactQuill
-              id='content'
-              value={content}
-              onChange={setContent}
-              placeholder='Enter your content'
-              modules={{
-                toolbar: [
-                  [{ header: [1, 2, false] }],
-                  ['bold', 'strike', 'italic', 'underline'],
-                  [{ list: 'ordered' }, { list: 'bullet' }],
-                  [
-                    { align: '' },
-                    { align: 'center' },
-                    { align: 'right' },
-                    { align: 'justify' },
-                  ],
-                  ['link', 'image'],
-                  ['clean'],
-                  ['zoomOut'],
-                ],
-              }}
-              className='[&_.ql-container]:border-0 [&_.ql-toolbar]:border-t-0 [&_.ql-toolbar]:border-l-0 [&_.ql-toolbar]:border-r-0 [&_.ql-toolbar]:border-b-[#D5D7DA] [&_.ql-editor]:min-h-[238]'
-              theme='snow'
-            />
+            <TextEditor value={content} onChange={setContent} />
           </div>
         </div>
 
