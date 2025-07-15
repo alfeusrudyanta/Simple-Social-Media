@@ -10,6 +10,7 @@ import type { User } from '@/interfaces/api';
 import LikeComment from '@/components/LikeComment';
 import DeleteConfirmationModal from './modals/DeleteConfirmationModal';
 import LikesCommentsListModal from './modals/LikesCommentsListModal';
+import { toast } from './ui/sonner';
 
 export default function PostCard({
   post,
@@ -26,9 +27,11 @@ export default function PostCard({
 
   const handleDeletePost = async () => {
     try {
+      toast.success('Post deleted.');
       await api.deletePost(post.id);
       setIsDeleteModalOpen(false);
     } catch (error) {
+      toast.error('Failed to delete post: Please try again later.');
       console.error('Failed to delete post:', error);
     }
   };
