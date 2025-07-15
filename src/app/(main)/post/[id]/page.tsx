@@ -11,8 +11,8 @@ import { useAuth } from '@/contexts/auth-context';
 import PostCommentsModal from '@/components/modals/PostCommentsModal';
 import LikeComment from '@/components/LikeComment';
 import PostCard from '@/components/PostCard';
-import { Button } from '@/components/ui/Button';
-import { Textarea } from '@/components/ui/Textarea';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 const PostDetail = () => {
   const api = useApi();

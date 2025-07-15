@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import type { PostListResponse, Post } from '@/interfaces/api';
 import PostCard from '@/components/PostCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Pagination from '@/components/ui/Pagination';
+import Pagination from '@/components/ui/pagination';
 import { cn } from '@/utils/cn';
 
 const HomePage = () => {

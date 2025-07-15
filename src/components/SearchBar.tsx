@@ -6,7 +6,7 @@ import { Search } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 
 interface SearchBarProps {
   View: 'Mobile' | 'Desktop';

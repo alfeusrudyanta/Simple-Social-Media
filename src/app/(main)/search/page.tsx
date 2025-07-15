@@ -8,7 +8,7 @@ import { useWindowWidth } from '@/hooks/useWindowWidth';
 import PostCard from '@/components/PostCard';
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 const SearchPage = () => {
   const searchParams = useSearchParams();

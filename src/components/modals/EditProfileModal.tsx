@@ -1,13 +1,12 @@
 'use client';
 
-import type React from 'react';
-import { Camera } from 'lucide-react';
-import { useState } from 'react';
-import { X } from 'lucide-react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { Camera, X } from 'lucide-react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import type { User } from '@/interfaces/api';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -34,8 +33,7 @@ const EditProfileModal = ({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-
-  if (!isOpen) return null;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -48,6 +46,7 @@ const EditProfileModal = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
 
     try {
       const dataToUpdate: { name?: string; headline?: string; avatar?: File } =
@@ -57,7 +56,7 @@ const EditProfileModal = ({
       if (avatarFile) dataToUpdate.avatar = avatarFile;
 
       if (Object.keys(dataToUpdate).length === 0) {
-        setIsSubmitting(false);
+        onClose();
         return;
       }
 
@@ -72,94 +71,104 @@ const EditProfileModal = ({
   };
 
   return (
-    <div className='fixed inset-0 bg-[#0A0D1299] flex items-center justify-center z-50 px-6'>
-      <div className='bg-white rounded-[16px] w-full max-w-[451px] flex flex-col gap-5 py-6 px-4 md:p-6'>
-        {/* Header */}
-        <div className='flex items-center justify-between'>
-          <p className='font-bold text-[16px] md:text-[20px] leading-[30px] md:leading-[34px] tracking-[-0.03em] text-[#0A0D12]'>
-            Edit Profile
-          </p>
-          <button
-            onClick={onClose}
-            className='p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer'
-          >
-            <X className='h-6 w-6 text-[#0A0D12]' />
-          </button>
-        </div>
+    <Dialog.Root open={isOpen} onOpenChange={onClose}>
+      <Dialog.Portal>
+        <Dialog.Overlay className='fixed inset-0 bg-[#0A0D1299] z-50' />
+        <Dialog.Content className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-48px)] max-w-[451px] bg-white rounded-[16px] flex flex-col gap-5 py-6 px-4 md:p-6 z-50 focus:outline-none'>
+          {/* Header */}
+          <div className='flex items-center justify-between'>
+            <Dialog.Title className='font-bold text-[16px] md:text-[20px] leading-[30px] md:leading-[34px] tracking-[-0.03em] text-[#0A0D12]'>
+              Edit Profile
+            </Dialog.Title>
+            <Dialog.Close asChild>
+              <button
+                className='p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer'
+                aria-label='Close'
+              >
+                <X className='h-6 w-6 text-[#0A0D12]' />
+              </button>
+            </Dialog.Close>
+          </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
-          <div className='flex flex-col items-center gap-5'>
-            {/* Avatar */}
-            <label className='relative cursor-pointer' htmlFor='avatar-upload'>
-              <Image
-                src={avatarPreview || '/unknown-user.png'}
-                alt='Avatar Preview'
-                height={100}
-                width={100}
-                className='rounded-full object-cover'
-              />
-              <div className='h-6 w-6 flex justify-center items-center absolute bottom-0 right-0 bg-[#0093DD] text-white rounded-full hover:bg-[#007BB8]'>
-                <Camera className='h-4 w-4' />
+          {/* Form */}
+          <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
+            <div className='flex flex-col items-center gap-5'>
+              {/* Avatar */}
+              <div className='relative group'>
+                <Image
+                  src={avatarPreview || '/unknown-user.png'}
+                  alt='Profile picture'
+                  width={100}
+                  height={100}
+                  className='rounded-full object-cover h-[100px] w-[100px]'
+                />
+                <button
+                  type='button'
+                  onClick={() => fileInputRef.current?.click()}
+                  className='absolute bottom-0 right-0 h-6 w-6 flex justify-center items-center bg-[#0093DD] text-white rounded-full hover:bg-[#007BB8] transition-colors'
+                  aria-label='Change profile picture'
+                >
+                  <Camera className='h-4 w-4' />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={handleFileChange}
+                />
               </div>
-              <input
-                id='avatar-upload'
-                type='file'
-                accept='image/*'
-                className='hidden'
-                onChange={handleFileChange}
+            </div>
+
+            {/* Name */}
+            <div className='flex flex-col gap-1'>
+              <label
+                htmlFor='name'
+                className='font-semibold text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
+              >
+                Name
+              </label>
+              <Input
+                id='name'
+                type='text'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder='Your Name'
+                disabled={isSubmitting}
+                className='font-normal text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
               />
-            </label>
-          </div>
+            </div>
 
-          {/* Name */}
-          <div className='flex flex-col gap-1'>
-            <label
-              htmlFor='name'
-              className='font-semibold text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
-            >
-              Name
-            </label>
-            <Input
-              id='name'
-              type='text'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder='Your Name'
-              disabled={isSubmitting}
-              className='font-normal text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
-            />
-          </div>
+            {/* Headline */}
+            <div className='flex flex-col gap-1'>
+              <label
+                htmlFor='headline'
+                className='font-semibold text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
+              >
+                Headline
+              </label>
+              <Input
+                id='headline'
+                type='text'
+                value={headline}
+                onChange={(e) => setHeadline(e.target.value)}
+                placeholder='Your Headline'
+                disabled={isSubmitting}
+                className='font-normal text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
+              />
+            </div>
 
-          {/* Headline */}
-          <div className='flex flex-col gap-1'>
-            <label
-              htmlFor='headline'
-              className='font-semibold text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
-            >
-              Headline
-            </label>
-            <Input
-              id='headline'
-              type='text'
-              value={headline}
-              onChange={(e) => setHeadline(e.target.value)}
-              placeholder='Your Headline'
-              disabled={isSubmitting}
-              className='font-normal text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
-            />
-          </div>
+            {error && (
+              <p className='text-red-500 text-[16px] leading-[32px]'>{error}</p>
+            )}
 
-          {error && (
-            <p className='text-red-500 text-[16px] leading-[32px]'>{error}</p>
-          )}
-
-          <Button type='submit' disabled={isSubmitting}>
-            {isSubmitting ? 'Saving...' : 'Save Changes'}
-          </Button>
-        </form>
-      </div>
-    </div>
+            <Button type='submit' disabled={isSubmitting}>
+              {isSubmitting ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </form>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };
 

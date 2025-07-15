@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, ArrowLeft } from 'lucide-react';
 import { useWindowWidth } from '@/hooks/useWindowWidth';
-import SearchBar from '@/components/ui/SearchBar';
+import SearchBar from '@/components/SearchBar';
 
 const MobileSearch = () => {
   const width = useWindowWidth();

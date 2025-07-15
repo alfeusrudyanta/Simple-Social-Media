@@ -6,13 +6,13 @@ import useApi from '@/lib/api-selector';
 import type { Post } from '@/interfaces/api';
 import EditProfileModal from '@/components/modals/EditProfileModal';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { FileText, PenLine } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/utils/cn';
 import PostCard from '@/components/PostCard';
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 
 const MyProfilePage = () => {
   const { currentUser, refreshUser, isLogin } = useAuth();

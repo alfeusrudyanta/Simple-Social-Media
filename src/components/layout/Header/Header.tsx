@@ -6,9 +6,10 @@ import Link from 'next/link';
 import { Menu, X, UserRound, LogOut, PenLine } from 'lucide-react';
 import { useWindowWidth } from '@/hooks/useWindowWidth';
 import MobileSearch from './MobileSearch';
-import SearchBar from '@/components/ui/SearchBar';
+import SearchBar from '@/components/SearchBar';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const width = useWindowWidth();
@@ -90,9 +91,7 @@ const Header = () => {
                   </p>
                 </Link>
                 <Link href='/register'>
-                  <button className='h-[44px] w-[214px] p-2 gap-2 rounded-full bg-[#0093DD] font-semibold text-[14px] leading-[28px] tracking-[-0.03em] text-[#FDFDFD] cursor-pointer'>
-                    Register
-                  </button>
+                  <Button className='w-[214px]'>Register</Button>
                 </Link>
               </div>
             </div>
@@ -136,9 +135,7 @@ const Header = () => {
             </Link>
             <div className='my-[10.5px] h-full w-[23px] border border-[#D5D7DA] rotate-90' />
             <Link href='/register'>
-              <button className='h-[44px] w-[182px] rounded-full p-2 gap-2 bg-[#0093DD] font-semibold text-[14px] leading-[28px] tracking-[-0.03em] text-[#FDFDFD] cursor-pointer'>
-                Register
-              </button>
+              <Button className='w-[182px]'>Register</Button>
             </Link>
           </div>
         </>
