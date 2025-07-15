@@ -42,7 +42,7 @@ const Register = () => {
       });
 
       if (res.id && res.email) {
-        toast.success('Register successful. Redirecting...');
+        toast.success('Register successful.');
         router.push('/login');
       }
     } catch (error) {

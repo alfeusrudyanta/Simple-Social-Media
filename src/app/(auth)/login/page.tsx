@@ -35,7 +35,7 @@ const Login = () => {
 
       if (res.token) {
         login(res.token, email);
-        toast.success('Login successful. Redirecting...');
+        toast.success('Login successful.');
         router.push('/');
       } else {
         toast.error('Invalid credentials. Please try again.');
