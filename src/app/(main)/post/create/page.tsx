@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { XCircle, CloudUpload, Trash, ArrowUpToLine } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/auth-context';
-import { toast, Toaster } from '@/components/ui/sonner';
+import { toast } from '@/components/ui/sonner';
 import TextEditor from '@/components/TextEditor';
 
 const CreatePostPage = () => {
@@ -262,8 +262,6 @@ const CreatePostPage = () => {
           {isSubmitting ? 'Creating...' : 'Create Post'}
         </Button>
       </form>
-
-      <Toaster />
     </div>
   );
 };

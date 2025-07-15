@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { toast, Toaster } from '@/components/ui/sonner';
+import { toast } from '@/components/ui/sonner';
 
 const Login = () => {
   const api = useApi();
@@ -113,8 +113,6 @@ const Login = () => {
           </Link>
         </div>
       </form>
-
-      <Toaster />
     </div>
   );
 };

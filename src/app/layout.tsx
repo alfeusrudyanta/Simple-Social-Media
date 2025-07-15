@@ -2,6 +2,7 @@ import type React from 'react';
 import type { Metadata } from 'next';
 import '@/styles/styles.css';
 import { AuthProvider } from '@/contexts/auth-context';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body className='flex flex-col min-h-screen'>
         <AuthProvider>
           <div className='flex-grow'>{children}</div>
+          <Toaster />
         </AuthProvider>
       </body>
     </html>

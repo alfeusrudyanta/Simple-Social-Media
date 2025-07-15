@@ -8,7 +8,7 @@ import type { RegisterResponse } from '@/interfaces/api';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { toast, Toaster } from '@/components/ui/sonner';
+import { toast } from '@/components/ui/sonner';
 
 const Register = () => {
   const api = useApi();
@@ -134,8 +134,6 @@ const Register = () => {
           </Link>
         </div>
       </form>
-
-      <Toaster />
     </div>
   );
 };

@@ -27,12 +27,12 @@ export default function PostCard({
 
   const handleDeletePost = async () => {
     try {
-      toast.success('Post deleted.');
       await api.deletePost(post.id);
       setIsDeleteModalOpen(false);
+      toast.success('Post deleted successfully');
     } catch (error) {
-      toast.error('Failed to delete post: Please try again later.');
       console.error('Failed to delete post:', error);
+      toast.error('Failed to delete post. Please try again.');
     }
   };
 
@@ -174,7 +174,9 @@ export default function PostCard({
       {isDeleteModalOpen && (
         <DeleteConfirmationModal
           isOpen={isDeleteModalOpen}
-          onClose={() => setIsDeleteModalOpen(false)}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+          }}
           onConfirm={handleDeletePost}
         />
       )}

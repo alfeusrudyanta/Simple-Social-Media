@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { ArrowUpToLine, CloudUpload, Trash, XCircle } from 'lucide-react';
 import TextEditor from '@/components/TextEditor';
 import { useAuth } from '@/contexts/auth-context';
-import { toast, Toaster } from '@/components/ui/sonner';
+import { toast } from '@/components/ui/sonner';
 
 const EditPostPage = () => {
   const api = useApi();
@@ -289,8 +289,6 @@ const EditPostPage = () => {
           {isSubmitting ? 'Creating...' : 'Create Post'}
         </Button>
       </form>
-
-      <Toaster />
     </div>
   );
 };

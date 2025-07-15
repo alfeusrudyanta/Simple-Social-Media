@@ -13,7 +13,7 @@ import Image from 'next/image';
 import { cn } from '@/utils/cn';
 import PostCard from '@/components/PostCard';
 import { Input } from '@/components/ui/input';
-import { toast, Toaster } from '@/components/ui/sonner';
+import { toast } from '@/components/ui/sonner';
 
 const MyProfilePage = () => {
   const { currentUser, refreshUser, isLogin } = useAuth();
@@ -82,6 +82,9 @@ const MyProfilePage = () => {
         currentPassword,
         newPassword,
       });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
       toast.success('Password successfully changed.');
     } catch (error) {
       console.error('Failed to change password:', error);
@@ -282,8 +285,6 @@ const MyProfilePage = () => {
           onUpdateProfile={handleUpdateProfile}
         />
       )}
-
-      <Toaster />
     </div>
   );
 };

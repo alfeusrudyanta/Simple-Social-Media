@@ -13,7 +13,7 @@ import LikeComment from '@/components/LikeComment';
 import PostCard from '@/components/PostCard';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { toast, Toaster } from '@/components/ui/sonner';
+import { toast } from '@/components/ui/sonner';
 
 const PostDetail = () => {
   const api = useApi();
@@ -279,8 +279,6 @@ const PostDetail = () => {
         onClose={() => setIsCommentsModalOpen(false)}
         postId={Number.parseInt(id as string)}
       />
-
-      <Toaster />
     </div>
   );
 };
