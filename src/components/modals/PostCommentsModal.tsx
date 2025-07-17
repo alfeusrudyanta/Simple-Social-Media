@@ -9,6 +9,7 @@ import useApi from '@/lib/api-selector';
 import Link from 'next/link';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
+import { toast } from '../ui/sonner';
 
 interface PostCommentsModalProps {
   isOpen: boolean;
@@ -59,8 +60,10 @@ const PostCommentsModal = ({
       });
       setModalComments((prev) => [createdComment, ...prev]);
       setNewComment('');
+      toast.success('Comment successfully created.');
     } catch (err) {
       console.error('Failed to submit comment:', err);
+      toast.error('Failed to submit comment. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

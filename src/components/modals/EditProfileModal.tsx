@@ -7,6 +7,7 @@ import Image from 'next/image';
 import type { User } from '@/interfaces/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from '../ui/sonner';
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -32,7 +33,6 @@ const EditProfileModal = ({
     currentUser.avatarUrl || null
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +46,6 @@ const EditProfileModal = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
 
     try {
       const dataToUpdate: { name?: string; headline?: string; avatar?: File } =
@@ -61,10 +60,11 @@ const EditProfileModal = ({
       }
 
       await onUpdateProfile(dataToUpdate);
+      toast.success('Profile successfully updated.');
       onClose();
     } catch (error) {
-      setError('Failed to update profile. Please try again.');
       console.error('Update profile error:', error);
+      toast.error('Update profile error. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -157,10 +157,6 @@ const EditProfileModal = ({
                 className='font-normal text-[14px] leading-[28px] tracking-[-0.03em] text-[#0A0D12]'
               />
             </div>
-
-            {error && (
-              <p className='text-red-500 text-[16px] leading-[32px]'>{error}</p>
-            )}
 
             <Button type='submit' disabled={isSubmitting}>
               {isSubmitting ? 'Saving...' : 'Save Changes'}

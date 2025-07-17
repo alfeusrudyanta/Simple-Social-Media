@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import api from '@/services/api';
 import PostCommentsModal from './modals/PostCommentsModal';
+import { toast } from '@/components/ui/sonner';
 
 interface LikeComment {
   Like: number;
@@ -27,6 +28,7 @@ const LikeComment = ({ Like, Comment, PostId }: LikeComment) => {
       await api.likePost(PostId);
     } catch (error) {
       console.error(error);
+      toast.error('Like/unlike error. Please try again.');
     }
   };
 
