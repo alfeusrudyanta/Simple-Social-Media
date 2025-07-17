@@ -36,7 +36,11 @@ const PostDetail = () => {
         setComments(commentRes);
 
         const recommendedRes = await api.getMostLikedPosts();
-        setRecommendedPosts(recommendedRes.data[0]);
+        if (recommendedRes.data[0].id === postRes.id) {
+          setRecommendedPosts(recommendedRes.data[1]);
+        } else {
+          setRecommendedPosts(recommendedRes.data[0]);
+        }
       } catch (error) {
         console.error('Failed to fetch post details', error);
       }
