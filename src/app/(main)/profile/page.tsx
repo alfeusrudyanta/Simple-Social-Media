@@ -30,10 +30,6 @@ const MyProfilePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!isLogin) {
-      router.push('/login');
-    }
-
     const fetchMyPosts = async () => {
       try {
         const res = await api.getMyPosts();

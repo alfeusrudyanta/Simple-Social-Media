@@ -32,10 +32,6 @@ const EditPostPage = () => {
   };
 
   useEffect(() => {
-    if (!isLogin) {
-      router.push('/login');
-    }
-
     const fetchPost = async () => {
       try {
         const postData = await api.getPostById(postId);

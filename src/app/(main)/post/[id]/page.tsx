@@ -17,7 +17,7 @@ import { toast } from '@/components/ui/sonner';
 
 const PostDetail = () => {
   const api = useApi();
-  const { currentUser, isLogin } = useAuth();
+  const { currentUser } = useAuth();
   const [post, setPost] = useState<Post>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
@@ -47,7 +47,7 @@ const PostDetail = () => {
   }, [api, id]);
 
   const handleSubmitComment = async (commentText: string) => {
-    if (!commentText.trim() || !isLogin) return;
+    if (!commentText.trim()) return;
 
     setIsSubmittingComment(true);
     try {
@@ -151,7 +151,7 @@ const PostDetail = () => {
         </p>
 
         {/* Login prompt for logged in users */}
-        {isLogin && currentUser && (
+        {currentUser && (
           <>
             <div className='flex flex-row gap-2 items-center'>
               <Image
@@ -185,18 +185,6 @@ const PostDetail = () => {
               {isSubmittingComment ? 'Sending...' : 'Send'}
             </Button>
           </>
-        )}
-
-        {/* Login prompt for non-logged in users */}
-        {!isLogin && (
-          <div className='flex flex-col gap-3 p-4 border border-[#D5D7DA] rounded-[12px] text-center'>
-            <p className='font-normal text-[14px] leading-[28px] tracking-[-0.03em] text-[#181D27]'>
-              Please log in to leave a comment
-            </p>
-            <Link href='/login'>
-              <Button className='w-[150px] mx-auto'>Login</Button>
-            </Link>
-          </div>
         )}
       </div>
 

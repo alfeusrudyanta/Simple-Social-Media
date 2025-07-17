@@ -22,18 +22,32 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const getCookie = (name: string) => {
+  if (typeof window === 'undefined') return null;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  return null;
+};
+
+const setCookie = (name: string, value: string) => {
+  document.cookie = `${name}=${value}; path=/; secure; samesite=lax`;
+};
+
+const deleteCookie = (name: string) => {
+  document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLogin, setIsLogin] = useState<boolean>(() => {
-    return Boolean(
-      typeof window !== 'undefined' && localStorage.getItem('token')
-    );
+    return Boolean(typeof window !== 'undefined' && getCookie('token'));
   });
 
   const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('email');
+    deleteCookie('token');
+    deleteCookie('email');
     setCurrentUser(null);
     setIsLogin(false);
   }, []);
@@ -55,14 +69,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const refreshUser = useCallback(async () => {
-    const email = localStorage.getItem('email');
+    const email = getCookie('email');
     if (email) await fetchUserData(email);
   }, [fetchUserData]);
 
   useEffect(() => {
     const initializeAuth = async () => {
       if (isLogin) {
-        const email = localStorage.getItem('email');
+        const email = getCookie('email');
         if (email) {
           await fetchUserData(email);
         } else {
@@ -77,8 +91,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [isLogin, fetchUserData, logout]);
 
   const login = useCallback((token: string, email: string) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('email', email);
+    setCookie('token', token);
+    setCookie('email', email);
     setIsLogin(true);
   }, []);
 

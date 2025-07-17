@@ -2,19 +2,17 @@
 
 import type React from 'react';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useApi from '@/lib/api-selector';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { XCircle, CloudUpload, Trash, ArrowUpToLine } from 'lucide-react';
 import Image from 'next/image';
-import { useAuth } from '@/contexts/auth-context';
 import { toast } from '@/components/ui/sonner';
 import TextEditor from '@/components/TextEditor';
 
 const CreatePostPage = () => {
-  const { isLogin } = useAuth();
   const api = useApi();
   const router = useRouter();
   const [title, setTitle] = useState('');
@@ -25,12 +23,6 @@ const CreatePostPage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  useEffect(() => {
-    if (!isLogin) {
-      router.push('/login');
-    }
-  });
 
   const handleTriggerFileInput = () => {
     fileInputRef.current?.click();
