@@ -102,6 +102,7 @@ const PostDetail = () => {
               alt={post?.author.name || 'author-profile-picture'}
               height={40}
               width={40}
+              loading='lazy'
               className='h-[40px] w-[40px] object-cover rounded-full'
             />
           </Link>
@@ -139,6 +140,7 @@ const PostDetail = () => {
           src={post ? post?.imageUrl : '/unknown-user.png'}
           alt={post ? post?.title : 'post-image'}
           fill
+          loading='lazy'
           className='object-cover rounded-[6px]'
         />
       </div>
@@ -163,6 +165,7 @@ const PostDetail = () => {
                 alt={currentUser.name}
                 height={40}
                 width={40}
+                loading='lazy'
                 className='h-[40px] w-[40px] object-cover rounded-full'
               />
               <p className='font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] tracking-[-0.03em] text-[#181D27]'>
@@ -208,6 +211,7 @@ const PostDetail = () => {
                       alt={comment.author.name}
                       height={48}
                       width={48}
+                      loading='lazy'
                       className='h-[40px] w-[40px] md:h-[48px] md:w-[48px] rounded-full object-cover flex-shrink-0'
                     />
                     <div className='flex flex-col flex-1'>

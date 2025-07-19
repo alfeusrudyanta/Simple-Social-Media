@@ -188,6 +188,7 @@ const CreatePostPage = () => {
                   alt='Image Preview'
                   height={280}
                   width={530}
+                  loading='lazy'
                   className='object-cover'
                 />
                 <div className='flex flex-row justify-center gap-3'>

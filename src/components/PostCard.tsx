@@ -64,6 +64,7 @@ export default function PostCard({
               <Image
                 src={post.imageUrl || '/unknown-user.png'}
                 alt={post.title}
+                loading='lazy'
                 fill
                 className='object-cover rounded-[6px]'
               />
@@ -111,6 +112,7 @@ export default function PostCard({
                       alt={authorData?.name || 'Author Image'}
                       height={40}
                       width={40}
+                      loading='lazy'
                       className='h-[30px] w-[30px] md:h-[40px] md:w-[40px] object-cover rounded-full'
                     />
                   </div>

@@ -103,6 +103,7 @@ const MyProfilePage = () => {
               alt={currentUser?.name || 'User Avatar'}
               height={80}
               width={80}
+              loading='lazy'
               className='h-[40px] md:h-[80px] w-[40px] md:w-[80px] rounded-full object-cover'
             />
           </Link>
