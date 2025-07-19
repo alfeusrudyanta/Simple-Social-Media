@@ -217,22 +217,26 @@ const PostDetail = () => {
             {comments.slice(0, 3).map((comment, index) => (
               <div key={comment.id}>
                 <div className='flex flex-col gap-2 md:gap-4'>
-                  <div className='flex flex-row items-center'>
-                    <Image
-                      src={
-                        getAvatarImgSrc(comment.author.avatarUrl) ??
-                        '/unknown-user.png'
-                      }
-                      alt={comment.author.name}
-                      height={48}
-                      width={48}
-                      loading='lazy'
-                      className='h-[40px] w-[40px] md:h-[48px] md:w-[48px] rounded-full object-cover flex-shrink-0'
-                    />
+                  <div className='flex flex-row gap-2 md:gap-3 items-center'>
+                    <Link href={`/profile/${comment.author.id}`}>
+                      <Image
+                        src={
+                          getAvatarImgSrc(comment.author.avatarUrl) ??
+                          '/unknown-user.png'
+                        }
+                        alt={comment.author.name}
+                        height={48}
+                        width={48}
+                        loading='lazy'
+                        className='h-[40px] w-[40px] md:h-[48px] md:w-[48px] rounded-full object-cover flex-shrink-0'
+                      />
+                    </Link>
                     <div className='flex flex-col flex-1'>
-                      <p className='-mb-[2px] font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] text-[#181D27]'>
-                        {comment.author.name}
-                      </p>
+                      <Link href={`/profile/${comment.author.id}`}>
+                        <p className='-mb-[2px] font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] text-[#181D27] hover:text-[#0093DD]'>
+                          {comment.author.name}
+                        </p>
+                      </Link>
                       <p className='font-normal text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] tracking-[-0.03em] text-[#535862]'>
                         {new Date(comment.createdAt).toLocaleDateString(
                           'en-GB',

@@ -149,7 +149,7 @@ const PostCommentsModal = ({
                       href={`/profile/${comment.author.id}`}
                       onClick={onClose}
                     >
-                      <p className='-mb-2 font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] md:tracking-[-0.03em] text-[#181D27] hover:underline'>
+                      <p className='-mb-2 font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] md:tracking-[-0.03em] text-[#181D27] hover:text-[#0093DD]'>
                         {comment.author.name}
                       </p>
                     </Link>

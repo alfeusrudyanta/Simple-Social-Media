@@ -156,11 +156,11 @@ const LikesCommentsListModal = ({
                     key={comment.id}
                     className='flex flex-col gap-2 md:gap-3'
                   >
-                    <Link
-                      href={`/profile/${comment.author.id}`}
-                      onClick={onClose}
-                    >
-                      <div className='flex items-center gap-3'>
+                    <div className='flex items-center gap-3'>
+                      <Link
+                        href={`/profile/${comment.author.id}`}
+                        onClick={onClose}
+                      >
                         <Image
                           src={
                             getAvatarImgSrc(comment.author.avatarUrl) ||
@@ -171,26 +171,31 @@ const LikesCommentsListModal = ({
                           width={48}
                           className='h-[40px] w-[40px] md:h-[48px] md:w-[48px] rounded-full object-cover'
                         />
-                        <div className='flex flex-col'>
-                          <p className='-mb-1 font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] text-[#181D27] group-hover:text-[#0093DD]'>
+                      </Link>
+                      <div className='flex flex-col'>
+                        <Link
+                          href={`/profile/${comment.author.id}`}
+                          onClick={onClose}
+                        >
+                          <p className='-mb-1 font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] text-[#181D27] hover:text-[#0093DD]'>
                             {comment.author.name}
                           </p>
-                          <p className='font-normal text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] tracking-[-0.03em] text-[#535862]'>
-                            {new Date(comment.createdAt).toLocaleDateString(
-                              'en-GB',
-                              {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                              }
-                            )}
-                          </p>
-                        </div>
+                        </Link>
+                        <p className='font-normal text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] tracking-[-0.03em] text-[#535862]'>
+                          {new Date(comment.createdAt).toLocaleDateString(
+                            'en-GB',
+                            {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                            }
+                          )}
+                        </p>
                       </div>
-                      <p className='font-normal text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] tracking-[-0.03em] text-[#181D27] mt-2'>
-                        {comment.content}
-                      </p>
-                    </Link>
+                    </div>
+                    <p className='font-normal text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] tracking-[-0.03em] text-[#181D27] mt-2'>
+                      {comment.content}
+                    </p>
                     {index < comments.length - 1 && (
                       <div className='w-full border border-[#D5D7DA]' />
                     )}

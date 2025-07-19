@@ -96,7 +96,10 @@ const EditProfileModal = ({
           <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
             <div className='flex flex-col items-center gap-5'>
               {/* Avatar */}
-              <div className='relative group'>
+              <div
+                className='relative group hover:cursor-pointer'
+                onClick={() => fileInputRef.current?.click()}
+              >
                 <Image
                   src={avatarPreview || '/unknown-user.png'}
                   alt='Profile picture'
@@ -104,14 +107,9 @@ const EditProfileModal = ({
                   height={100}
                   className='rounded-full object-cover h-[100px] w-[100px]'
                 />
-                <button
-                  type='button'
-                  onClick={() => fileInputRef.current?.click()}
-                  className='absolute bottom-0 right-0 h-6 w-6 flex justify-center items-center bg-[#0093DD] text-white rounded-full hover:bg-[#007BB8] transition-colors'
-                  aria-label='Change profile picture'
-                >
+                <div className='absolute bottom-0 right-0 h-6 w-6 flex justify-center items-center bg-[#0093DD] text-white rounded-full hover:bg-[#007BB8] transition-colors hover:cursor-pointer'>
                   <Camera className='h-4 w-4' />
-                </button>
+                </div>
                 <input
                   ref={fileInputRef}
                   type='file'
