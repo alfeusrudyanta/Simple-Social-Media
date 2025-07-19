@@ -7,9 +7,10 @@ import Image from 'next/image';
 import type { Comment } from '@/interfaces/api';
 import useApi from '@/lib/api-selector';
 import Link from 'next/link';
-import { Textarea } from '../ui/textarea';
-import { Button } from '../ui/button';
-import { toast } from '../ui/sonner';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/sonner';
+import getAvatarImgSrc from '@/utils/avatar';
 
 interface PostCommentsModalProps {
   isOpen: boolean;
@@ -90,6 +91,7 @@ const PostCommentsModal = ({
             </Dialog.Title>
             <Dialog.Close asChild>
               <button
+                type='button'
                 className='p-1 hover:bg-gray-100 rounded-full transition-colors cursor-pointer'
                 aria-label='Close comments'
               >
@@ -112,6 +114,7 @@ const PostCommentsModal = ({
             />
             <div className='flex justify-end mt-3'>
               <Button
+                type='submit'
                 onClick={handleSubmit}
                 disabled={isSubmitting || !newComment.trim()}
                 className='md:w-[204px]'
@@ -131,7 +134,10 @@ const PostCommentsModal = ({
                     onClick={onClose}
                   >
                     <Image
-                      src={comment.author.avatarUrl || '/unknown-user.png'}
+                      src={
+                        getAvatarImgSrc(comment.author.avatarUrl) ||
+                        '/unknown-user.png'
+                      }
                       alt={comment.author.name}
                       height={48}
                       width={48}

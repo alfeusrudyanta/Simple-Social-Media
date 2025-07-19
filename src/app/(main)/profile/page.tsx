@@ -14,6 +14,8 @@ import { cn } from '@/utils/cn';
 import PostCard from '@/components/PostCard';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/sonner';
+import getAvatarImgSrc from '@/utils/avatar';
+import Loading from '@/app/loading';
 
 const MyProfilePage = () => {
   const { currentUser, refreshUser, isLogin } = useAuth();
@@ -28,6 +30,7 @@ const MyProfilePage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
     const fetchMyPosts = async () => {
@@ -36,12 +39,16 @@ const MyProfilePage = () => {
         setMyPosts(res.data);
       } catch (error) {
         console.error('Failed to fetch my posts:', error);
+      } finally {
+        if (initialLoad) setInitialLoad(false);
       }
     };
 
     const interval = setInterval(fetchMyPosts, 1000);
     return () => clearInterval(interval);
-  }, [api, isLogin, router]);
+  }, [api, isLogin, router, initialLoad]);
+
+  if (initialLoad) return <Loading />;
 
   const handleUpdateProfile = async (data: {
     name?: string;
@@ -99,7 +106,9 @@ const MyProfilePage = () => {
         <div className='flex flex-row gap-2 items-center '>
           <Link href={`/profile/${currentUser?.id}`}>
             <Image
-              src={currentUser?.avatarUrl || '/unknown-user.png'}
+              src={
+                getAvatarImgSrc(currentUser?.avatarUrl) || '/unknown-user.png'
+              }
               alt={currentUser?.name || 'User Avatar'}
               height={80}
               width={80}
@@ -130,6 +139,7 @@ const MyProfilePage = () => {
       {/* Tabs */}
       <div className='flex'>
         <Button
+          type='button'
           variant='none'
           className={cn(
             'md:w-[177px] rounded-none',
@@ -142,6 +152,7 @@ const MyProfilePage = () => {
           Your Post
         </Button>
         <Button
+          type='button'
           variant='none'
           className={cn(
             'md:w-[177px] rounded-none',
@@ -168,6 +179,7 @@ const MyProfilePage = () => {
                 No posts yet, but every great writer starts with the first one.
               </p>
               <Button
+                type='button'
                 className='w-[200px] mt-6'
                 onClick={() => router.push('/post/create')}
               >
@@ -178,7 +190,10 @@ const MyProfilePage = () => {
             <div className='flex flex-col gap-4 md:gap-5'>
               {/* Post */}
               <div className='flex flex-col gap-4 md:hidden'>
-                <Button onClick={() => router.push('/post/create')}>
+                <Button
+                  type='button'
+                  onClick={() => router.push('/post/create')}
+                >
                   <PenLine height={24} width={24} />
                   <p>Write Post</p>
                 </Button>
@@ -192,6 +207,7 @@ const MyProfilePage = () => {
                   {myPosts.length} Post
                 </p>
                 <Button
+                  type='button'
                   className='hidden md:flex w-[182px]'
                   onClick={() => router.push('/post/create')}
                 >

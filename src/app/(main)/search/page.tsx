@@ -9,6 +9,7 @@ import PostCard from '@/components/PostCard';
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import Loading from '@/app/loading';
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
@@ -17,6 +18,7 @@ const SearchPage = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const width = useWindowWidth();
   const isMobile = width && width < 768;
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!query?.trim()) {
@@ -26,17 +28,21 @@ const SearchPage = () => {
 
     const fetchPosts = async () => {
       try {
+        setLoading(true);
         const res = await api.searchPosts({ query });
         setPosts(res.data);
       } catch (error) {
         console.error('Search error', error);
         setPosts([]);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const interval = setInterval(fetchPosts, 1000);
-    return () => clearInterval(interval);
+    fetchPosts();
   }, [query, api]);
+
+  if (loading) return <Loading />;
 
   return (
     <>
@@ -53,7 +59,9 @@ const SearchPage = () => {
               </p>
             </div>
             <Link href='/'>
-              <Button className='w-[200px]'>Back to Home</Button>
+              <Button type='button' className='w-[200px]'>
+                Back to Home
+              </Button>
             </Link>
           </div>
         </div>

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import type { Comment, UserLike } from '@/interfaces/api';
 import useApi from '@/lib/api-selector';
 import { cn } from '@/utils/cn';
+import getAvatarImgSrc from '@/utils/avatar';
 
 interface LikesCommentsListModalProps {
   isOpen: boolean;
@@ -59,6 +60,7 @@ const LikesCommentsListModal = ({
             </Dialog.Title>
             <Dialog.Close asChild>
               <button
+                type='button'
                 className='p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer'
                 aria-label='Close'
               >
@@ -70,6 +72,7 @@ const LikesCommentsListModal = ({
           {/* Tabs */}
           <div className='flex border-b border-[#D5D7DA]'>
             <button
+              type='button'
               className={cn(
                 'h-[44px] w-full justify-center flex items-center gap-2 font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] tracking-[-0.03em] cursor-pointer',
                 activeTab === 'likes'
@@ -82,6 +85,7 @@ const LikesCommentsListModal = ({
               <p>Like</p>
             </button>
             <button
+              type='button'
               className={cn(
                 'h-[44px] w-full justify-center flex items-center gap-2 font-semibold text-[12px] md:text-[14px] leading-[24px] md:leading-[28px] tracking-[-0.03em] cursor-pointer',
                 activeTab === 'comments'
@@ -112,7 +116,10 @@ const LikesCommentsListModal = ({
                       <Link href={`/profile/${user.id}`} onClick={onClose}>
                         <div className='flex items-center gap-3 cursor-pointer group'>
                           <Image
-                            src={user.avatarUrl || '/unknown-user.png'}
+                            src={
+                              getAvatarImgSrc(user.avatarUrl) ||
+                              '/unknown-user.png'
+                            }
                             alt={user.name}
                             height={48}
                             width={48}
@@ -155,7 +162,10 @@ const LikesCommentsListModal = ({
                     >
                       <div className='flex items-center gap-3'>
                         <Image
-                          src={comment.author.avatarUrl || '/unknown-user.png'}
+                          src={
+                            getAvatarImgSrc(comment.author.avatarUrl) ||
+                            '/unknown-user.png'
+                          }
                           alt={comment.author.name}
                           height={48}
                           width={48}

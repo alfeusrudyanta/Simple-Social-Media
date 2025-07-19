@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/storage/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'blogger-wph-api-production.up.railway.app',
+        port: '',
+        pathname: '/uploads/**',
+      },
     ],
   },
 };

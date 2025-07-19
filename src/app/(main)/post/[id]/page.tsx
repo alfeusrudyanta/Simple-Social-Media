@@ -14,6 +14,8 @@ import PostCard from '@/components/PostCard';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/sonner';
+import getAvatarImgSrc from '@/utils/avatar';
+import Loading from '@/app/loading';
 
 const PostDetail = () => {
   const api = useApi();
@@ -25,6 +27,7 @@ const PostDetail = () => {
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const { id } = useParams();
   const [recommendedPosts, setRecommendedPosts] = useState<Post>();
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,12 +46,16 @@ const PostDetail = () => {
         }
       } catch (error) {
         console.error('Failed to fetch post details', error);
+      } finally {
+        if (initialLoad) setInitialLoad(false);
       }
     };
 
     const interval = setInterval(fetchData, 1000);
     return () => clearInterval(interval);
-  }, [api, id]);
+  }, [api, id, initialLoad]);
+
+  if (initialLoad) return <Loading />;
 
   const handleSubmitComment = async (commentText: string) => {
     if (!commentText.trim()) return;
@@ -98,7 +105,9 @@ const PostDetail = () => {
         <div className='flex flex-row gap-2 items-center'>
           <Link href={`/profile/${post?.author.id}`}>
             <Image
-              src={post?.author.avatarUrl || '/unknown-user.png'}
+              src={
+                getAvatarImgSrc(post?.author.avatarUrl) || '/unknown-user.png'
+              }
               alt={post?.author.name || 'author-profile-picture'}
               height={40}
               width={40}
@@ -161,7 +170,9 @@ const PostDetail = () => {
           <>
             <div className='flex flex-row gap-2 items-center'>
               <Image
-                src={currentUser.avatarUrl || '/unknown-user.png'}
+                src={
+                  getAvatarImgSrc(currentUser.avatarUrl) || '/unknown-user.png'
+                }
                 alt={currentUser.name}
                 height={40}
                 width={40}
@@ -185,6 +196,7 @@ const PostDetail = () => {
               />
             </div>
             <Button
+              type='submit'
               onClick={handleQuickComment}
               disabled={isSubmittingComment || !newComment.trim()}
               className='ml-auto md:w-[200px]'
@@ -207,7 +219,10 @@ const PostDetail = () => {
                 <div className='flex flex-col gap-2 md:gap-4'>
                   <div className='flex flex-row items-center'>
                     <Image
-                      src={comment.author.avatarUrl ?? '/unknown-user.png'}
+                      src={
+                        getAvatarImgSrc(comment.author.avatarUrl) ??
+                        '/unknown-user.png'
+                      }
                       alt={comment.author.name}
                       height={48}
                       width={48}

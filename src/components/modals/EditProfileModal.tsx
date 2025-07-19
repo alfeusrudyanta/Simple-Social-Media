@@ -8,6 +8,7 @@ import type { User } from '@/interfaces/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '../ui/sonner';
+import getAvatarImgSrc from '@/utils/avatar';
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -30,7 +31,7 @@ const EditProfileModal = ({
   const [headline, setHeadline] = useState(currentUser.headline || '');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    currentUser.avatarUrl || null
+    getAvatarImgSrc(currentUser.avatarUrl) || null
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -82,6 +83,7 @@ const EditProfileModal = ({
             </Dialog.Title>
             <Dialog.Close asChild>
               <button
+                type='button'
                 className='p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer'
                 aria-label='Close'
               >

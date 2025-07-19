@@ -224,6 +224,7 @@ const EditPostPage = () => {
                 />
                 <div className='flex flex-row justify-center gap-3'>
                   <Button
+                    type='button'
                     variant='none'
                     onClick={handleTriggerFileInput}
                     className='text-[#0A0D12] rounded-[10px] p-1 max-w-[133px]'
@@ -233,6 +234,7 @@ const EditPostPage = () => {
                   </Button>
 
                   <Button
+                    type='button'
                     variant='none'
                     onClick={handleRemoveImage}
                     className='text-[#EE1D52] hover:text-red-600 rounded-[10px] p-1 max-w-[133px]'

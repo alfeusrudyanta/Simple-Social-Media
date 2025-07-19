@@ -10,6 +10,8 @@ import { FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import PostCard from '@/components/PostCard';
+import getAvatarImgSrc from '@/utils/avatar';
+import Loading from '@/app/loading';
 
 const OtherUserProfilePage = () => {
   const { id } = useParams();
@@ -18,6 +20,7 @@ const OtherUserProfilePage = () => {
   const { currentUser } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [userPosts, setUserPosts] = useState<Post[]>([]);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
     const userId = Number.parseInt(id as string);
@@ -39,6 +42,8 @@ const OtherUserProfilePage = () => {
       } catch (error) {
         console.error('Failed to fetch user posts:', error);
         setUserPosts([]);
+      } finally {
+        if (initialLoad) setInitialLoad(false);
       }
     };
 
@@ -47,7 +52,7 @@ const OtherUserProfilePage = () => {
       const interval = setInterval(fetchUserPosts, 1000);
       return () => clearInterval(interval);
     }
-  }, [api, id]);
+  }, [api, id, initialLoad]);
 
   useEffect(() => {
     if (user && currentUser) {
@@ -57,12 +62,14 @@ const OtherUserProfilePage = () => {
     }
   }, [currentUser, user, router]);
 
+  if (initialLoad) return <Loading />;
+
   return (
     <div className='flex flex-col py-6 md:py-0 px-4 md:px-0 md:mt-12 md:mb-[144px] mx-0 md:mx-[320px] gap-4 md:gap-6'>
       <div className='flex flex-row gap-2 items-center'>
         <Link href={`/profile/${id}`}>
           <Image
-            src={user?.avatarUrl || '/unknown-user.png'}
+            src={getAvatarImgSrc(user?.avatarUrl) || '/unknown-user.png'}
             alt={user?.name || 'User Avatar'}
             height={80}
             width={80}

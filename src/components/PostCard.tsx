@@ -11,6 +11,7 @@ import LikeComment from '@/components/LikeComment';
 import DeleteConfirmationModal from './modals/DeleteConfirmationModal';
 import LikesCommentsListModal from './modals/LikesCommentsListModal';
 import { toast } from './ui/sonner';
+import getAvatarImgSrc from '@/utils/avatar';
 
 export default function PostCard({
   post,
@@ -108,7 +109,10 @@ export default function PostCard({
                 <Link href={`/profile/${post.author.id}`}>
                   <div className='relative'>
                     <Image
-                      src={authorData?.avatarUrl || '/unknown-user.png'}
+                      src={
+                        getAvatarImgSrc(authorData?.avatarUrl) ||
+                        '/unknown-user.png'
+                      }
                       alt={authorData?.name || 'Author Image'}
                       height={40}
                       width={40}

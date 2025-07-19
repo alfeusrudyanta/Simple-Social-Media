@@ -10,6 +10,7 @@ import SearchBar from '@/components/SearchBar';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import getAvatarImgSrc from '@/utils/avatar';
 
 const Header = () => {
   const width = useWindowWidth();
@@ -91,7 +92,9 @@ const Header = () => {
                   </p>
                 </Link>
                 <Link href='/register'>
-                  <Button className='w-[214px]'>Register</Button>
+                  <Button type='button' className='w-[214px]'>
+                    Register
+                  </Button>
                 </Link>
               </div>
             </div>
@@ -113,11 +116,11 @@ const Header = () => {
             <MobileSearch />
           </div>
           <Image
-            src={currentUser?.avatarUrl || '/unknown-user.png'}
+            src={getAvatarImgSrc(currentUser?.avatarUrl) || '/unknown-user.png'}
             alt={currentUser?.name || 'user-avatar'}
             height={40}
             width={40}
-            className='object-cover rounded-full cursor-pointer'
+            className='h-[40px] w-[40px] object-cover rounded-full'
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           />
         </div>
@@ -135,7 +138,9 @@ const Header = () => {
             </Link>
             <div className='my-[10.5px] h-full w-[23px] border border-[#D5D7DA] rotate-90' />
             <Link href='/register'>
-              <Button className='w-[182px]'>Register</Button>
+              <Button type='button' className='w-[182px]'>
+                Register
+              </Button>
             </Link>
           </div>
         </>
@@ -160,11 +165,13 @@ const Header = () => {
               onClick={() => setIsProfileOpen(!isProfileOpen)}
             >
               <Image
-                src={currentUser?.avatarUrl || '/unknown-user.png'}
+                src={
+                  getAvatarImgSrc(currentUser?.avatarUrl) || '/unknown-user.png'
+                }
                 alt={currentUser?.name || 'user-avatar'}
                 height={40}
                 width={40}
-                className='object-cover rounded-full'
+                className='h-[40px] w-[40px] object-cover rounded-full'
               />
               <p className='font-medium text-[14px] leading-[28px] tracking-[-0.03em] text-[#181D27]'>
                 {currentUser?.name || 'User'}

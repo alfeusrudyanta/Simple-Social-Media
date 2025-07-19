@@ -27,6 +27,7 @@ const DeleteConfirmationModal = ({
             </Dialog.Title>
             <Dialog.Close asChild>
               <Button
+                type='button'
                 variant='none'
                 className='max-w-[48px] hover:bg-gray-100'
                 aria-label='Close'

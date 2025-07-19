@@ -7,12 +7,14 @@ import PostCard from '@/components/PostCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Pagination from '@/components/ui/pagination';
 import { cn } from '@/utils/cn';
+import Loading from '@/app/loading';
 
 const HomePage = () => {
   const api = useApi();
   const [recommendedPosts, setRecommendedPosts] = useState<PostListResponse>();
   const [page, setPage] = useState<number>(1);
   const [mostLikedPosts, setMostLikedPosts] = useState<Post[]>([]);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,12 +25,16 @@ const HomePage = () => {
         setMostLikedPosts(likeRes.data);
       } catch (error) {
         console.error('Failed to get recommeded / most liked posts', error);
+      } finally {
+        if (initialLoad) setInitialLoad(false);
       }
     };
 
     const interval = setInterval(fetchData, 1000);
     return () => clearInterval(interval);
-  }, [api, page]);
+  }, [api, page, initialLoad]);
+
+  if (initialLoad) return <Loading />;
 
   return (
     <div className='flex flex-col md:my-12 md:mx-[120px] md:flex-row md:gap-12'>
